@@ -1,0 +1,23 @@
+# Orchestrator Configuration
+# This file is read by agent.py at startup to configure model selection
+# and project settings for the deep agent orchestrator.
+
+orchestrator:
+  # Model used for reasoning/planning steps (higher capability)
+  # Format: "provider:model" — compatible with langchain init_chat_model()
+  reasoning_model: "anthropic:claude-sonnet-4-6"
+
+  # Model used for implementation/execution steps (faster, cost-effective)
+  # Format: "provider:model" — compatible with langchain init_chat_model()
+  implementation_model: "anthropic:claude-haiku-4-5"
+
+  # Checkpoint level controls state persistence granularity
+  # Options: "minimal" | "standard" | "verbose"
+  checkpoint_level: "standard"
+
+project:
+  # Project name used for identification in logs and tracing
+  name: "deepagents-orchestrator-exemplar"
+
+  # Human-readable description of the project purpose
+  description: "An exemplar project demonstrating the DeepAgents orchestrator pattern with multi-model configuration, domain-driven task decomposition, and structured evaluation."
