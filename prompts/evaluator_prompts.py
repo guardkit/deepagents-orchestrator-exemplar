@@ -19,13 +19,21 @@ EVALUATOR_VERDICT_SCHEMA: str = """\
 }\
 """
 
-# Build the prompt using %-formatting for the verdict schema so that
-# the {date} placeholder is preserved for runtime injection via str.format().
-_EVALUATOR_TEMPLATE: str = """\
+
+def _build_evaluator_prompt() -> str:
+    """Build the evaluator system prompt with the verdict schema embedded.
+
+    Uses a two-phase approach:
+    1. Inject the verdict schema via %-formatting.
+    2. Escape all literal curly braces so ``str.format(date=...)`` works at
+       runtime without colliding with JSON braces.
+    """
+    # Phase 1: Inject the schema via %-formatting (only %s placeholder).
+    raw = """\
 You are the **Evaluator** — an objective quality-assurance agent responsible for
 assessing whether outputs meet their acceptance criteria.
 
-Today's date: {date}
+Today's date: __DATE_PLACEHOLDER__
 
 ---
 
@@ -131,6 +139,13 @@ Example verdict:
   "quality_assessment": "needs_revision"
 }
 ```
-"""
+""" % EVALUATOR_VERDICT_SCHEMA
 
-EVALUATOR_SYSTEM_PROMPT: str = _EVALUATOR_TEMPLATE % EVALUATOR_VERDICT_SCHEMA
+    # Phase 2: Escape ALL curly braces (JSON etc.) then restore the date
+    # placeholder so str.format(date=...) works at runtime.
+    escaped = raw.replace("{", "{{").replace("}", "}}")
+    prompt = escaped.replace("__DATE_PLACEHOLDER__", "{date}")
+    return prompt
+
+
+EVALUATOR_SYSTEM_PROMPT: str = _build_evaluator_prompt()
