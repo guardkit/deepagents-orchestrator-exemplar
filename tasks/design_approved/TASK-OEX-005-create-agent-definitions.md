@@ -1,36 +1,41 @@
 ---
-id: TASK-OEX-005
-title: "Create agent definitions for all four roles"
-task_type: feature
-parent_review: TASK-REV-8562
-feature_id: FEAT-OEX
-wave: 2
-implementation_mode: task-work
 complexity: 7
-dependencies:
-  - TASK-OEX-001
-  - TASK-OEX-002
-  - TASK-OEX-003
-  - TASK-OEX-004
-status: pending
-priority: high
-tags: [agents, subagent, async-subagent, multi-model]
 consumer_context:
-  - task: TASK-OEX-002
-    consumes: TOOLS
-    framework: "create_deep_agent tools parameter"
-    driver: "langchain_core.tools"
-    format_note: "Tools must be @tool-decorated callables importable from tools/ package"
-  - task: TASK-OEX-003
-    consumes: PROMPTS
-    framework: "SubAgent system_prompt field"
-    driver: "deepagents SubAgent TypedDict"
-    format_note: "Prompts must be string constants importable from prompts/ package"
-  - task: TASK-OEX-004
-    consumes: CONFIG
-    framework: "yaml.safe_load + init_chat_model"
-    driver: "pyyaml + langchain"
-    format_note: "Model values must be 'provider:model' format strings compatible with init_chat_model()"
+- consumes: TOOLS
+  driver: langchain_core.tools
+  format_note: Tools must be @tool-decorated callables importable from tools/ package
+  framework: create_deep_agent tools parameter
+  task: TASK-OEX-002
+- consumes: PROMPTS
+  driver: deepagents SubAgent TypedDict
+  format_note: Prompts must be string constants importable from prompts/ package
+  framework: SubAgent system_prompt field
+  task: TASK-OEX-003
+- consumes: CONFIG
+  driver: pyyaml + langchain
+  format_note: Model values must be 'provider:model' format strings compatible with
+    init_chat_model()
+  framework: yaml.safe_load + init_chat_model
+  task: TASK-OEX-004
+dependencies:
+- TASK-OEX-001
+- TASK-OEX-002
+- TASK-OEX-003
+- TASK-OEX-004
+feature_id: FEAT-OEX
+id: TASK-OEX-005
+implementation_mode: task-work
+parent_review: TASK-REV-8562
+priority: high
+status: design_approved
+tags:
+- agents
+- subagent
+- async-subagent
+- multi-model
+task_type: feature
+title: Create agent definitions for all four roles
+wave: 2
 ---
 
 # Task: Create agent definitions for all four roles

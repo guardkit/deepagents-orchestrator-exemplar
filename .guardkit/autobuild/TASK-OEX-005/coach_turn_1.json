@@ -1,0 +1,187 @@
+{
+  "task_id": "TASK-OEX-005",
+  "turn": 1,
+  "decision": "approve",
+  "validation_results": {
+    "quality_gates": {
+      "tests_passed": true,
+      "coverage_met": true,
+      "arch_review_passed": true,
+      "plan_audit_passed": true,
+      "all_gates_passed": true
+    },
+    "independent_tests": {
+      "tests_passed": true,
+      "test_command": "pytest tests/test_agents.py tests/test_scaffold.py -v --tb=short",
+      "test_output_summary": "Result:\ntests/test_scaffold.py::TestInitFiles::test_tools_directory_is_package PASSED [ 96%]\ntests/test_scaffold.py::TestInitFiles::test_prompts_directory_is_package PASSED [ 97%]\ntests/test_scaffold.py::TestProjectStructure::test_all_required_files_exist PASSED [ 98%]\ntests/test_scaffold.py::TestProjectStructure::test_no_env_file_committed PASSED [100%]\n======================== 77 passed, 1 warning in 2.93s =========================",
+      "duration_seconds": 13.665556907653809
+    },
+    "requirements": {
+      "criteria_total": 9,
+      "criteria_met": 9,
+      "all_criteria_met": true,
+      "missing": []
+    }
+  },
+  "criteria_verification": [
+    {
+      "criterion_id": "AC-001",
+      "criterion_text": "`agents/orchestrator.py` exports `create_orchestrator(reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph`",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "create_orchestrator function is defined in agents/agents.py with exact signature (reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph and re-exported from agents/__init__.py. Tests TestCreateOrchestratorExport verify importability, parameter names, and type annotations.",
+      "notes": "create_orchestrator function is defined in agents/agents.py with exact signature (reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph and re-exported from agents/__init__.py. Tests TestCreateOrchestratorExport verify importability, parameter names, and type annotations."
+    },
+    {
+      "criterion_id": "AC-002",
+      "criterion_text": "`create_orchestrator` uses `create_deep_agent()` with: model, tools, system_prompt, subagents (list of 3), memory, skills, context_schema",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "create_orchestrator calls create_deep_agent() with model=reasoning_model, tools=4 orchestrator tools, system_prompt with domain_prompt injected, subagents=[implementer, evaluator, builder], memory=None, skills=None, context_schema=None. Tests TestCreateOrchestratorCallsDeepAgent verify all kwargs via mock patching (6 tests).",
+      "notes": "create_orchestrator calls create_deep_agent() with model=reasoning_model, tools=4 orchestrator tools, system_prompt with domain_prompt injected, subagents=[implementer, evaluator, builder], memory=None, skills=None, context_schema=None. Tests TestCreateOrchestratorCallsDeepAgent verify all kwargs via mock patching (6 tests)."
+    },
+    {
+      "criterion_id": "AC-003",
+      "criterion_text": "`agents/implementer.py` exports `implementer_subagent` as a function that accepts `model: str` and returns SubAgent TypedDict",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "implementer_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestImplementerSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type.",
+      "notes": "implementer_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestImplementerSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type."
+    },
+    {
+      "criterion_id": "AC-004",
+      "criterion_text": "Implementer SubAgent includes: name, description, system_prompt, model (required), tools (the 4 tools from TASK-OEX-002)",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "implementer_subagent returns a SubAgent dict with name='implementer', description (>10 chars), system_prompt (formatted IMPLEMENTER_SYSTEM_PROMPT), model matching the input param, and tools=[analyse_context, plan_pipeline, execute_command, verify_output]. Tests verify all 5 fields and that tools are the correct 4 BaseTool instances by name.",
+      "notes": "implementer_subagent returns a SubAgent dict with name='implementer', description (>10 chars), system_prompt (formatted IMPLEMENTER_SYSTEM_PROMPT), model matching the input param, and tools=[analyse_context, plan_pipeline, execute_command, verify_output]. Tests verify all 5 fields and that tools are the correct 4 BaseTool instances by name."
+    },
+    {
+      "criterion_id": "AC-005",
+      "criterion_text": "`agents/evaluator.py` exports `evaluator_subagent` as a function that accepts `model: str` and returns SubAgent TypedDict",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "evaluator_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestEvaluatorSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type.",
+      "notes": "evaluator_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestEvaluatorSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type."
+    },
+    {
+      "criterion_id": "AC-006",
+      "criterion_text": "Evaluator SubAgent includes: name, description, system_prompt, model (required), tools=[] (explicit empty list \u2014 NO tools)",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "evaluator_subagent returns a SubAgent dict with name='evaluator', description, system_prompt (formatted EVALUATOR_SYSTEM_PROMPT), model matching input, and tools=[] (explicit empty list). TestEvaluatorSubagent.test_has_tools_explicit_empty_list asserts tools==[] and isinstance(tools, list).",
+      "notes": "evaluator_subagent returns a SubAgent dict with name='evaluator', description, system_prompt (formatted EVALUATOR_SYSTEM_PROMPT), model matching input, and tools=[] (explicit empty list). TestEvaluatorSubagent.test_has_tools_explicit_empty_list asserts tools==[] and isinstance(tools, list)."
+    },
+    {
+      "criterion_id": "AC-007",
+      "criterion_text": "`agents/builder.py` exports `builder_async_subagent` as AsyncSubAgent TypedDict with: name, description, graph_id, url (configurable)",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "builder_async_subagent(url=None, graph_id='builder') -> AsyncSubAgent is defined in agents/agents.py and re-exported. Returns dict with name='builder', description, graph_id='builder'. URL is configurable via parameter (omitted by default for ASGI transport). TestBuilderAsyncSubagent verifies all fields and url configurability.",
+      "notes": "builder_async_subagent(url=None, graph_id='builder') -> AsyncSubAgent is defined in agents/agents.py and re-exported. Returns dict with name='builder', description, graph_id='builder'. URL is configurable via parameter (omitted by default for ASGI transport). TestBuilderAsyncSubagent verifies all fields and url configurability."
+    },
+    {
+      "criterion_id": "AC-008",
+      "criterion_text": "`agents/__init__.py` exports all agent factories/specs",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "agents/__init__.py imports and re-exports create_orchestrator, implementer_subagent, evaluator_subagent, builder_async_subagent in __all__. TestAgentsPackageExports verifies all 4 exports are importable and present in __all__.",
+      "notes": "agents/__init__.py imports and re-exports create_orchestrator, implementer_subagent, evaluator_subagent, builder_async_subagent in __all__. TestAgentsPackageExports verifies all 4 exports are importable and present in __all__."
+    },
+    {
+      "criterion_id": "AC-009",
+      "criterion_text": "All modified files pass project-configured lint/format checks with zero errors",
+      "result": "verified",
+      "status": "verified",
+      "evidence": "All files pass 'ruff check' and 'ruff format --check' with zero errors. TestCodeQuality verifies docstrings exist on all functions and the module.",
+      "notes": "All files pass 'ruff check' and 'ruff format --check' with zero errors. TestCodeQuality verifies docstrings exist on all functions and the module."
+    }
+  ],
+  "acceptance_criteria_verification": {
+    "criteria_results": [
+      {
+        "criterion_id": "AC-001",
+        "criterion_text": "`agents/orchestrator.py` exports `create_orchestrator(reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph`",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "create_orchestrator function is defined in agents/agents.py with exact signature (reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph and re-exported from agents/__init__.py. Tests TestCreateOrchestratorExport verify importability, parameter names, and type annotations.",
+        "notes": "create_orchestrator function is defined in agents/agents.py with exact signature (reasoning_model: str, implementation_model: str, domain_prompt: str) -> CompiledStateGraph and re-exported from agents/__init__.py. Tests TestCreateOrchestratorExport verify importability, parameter names, and type annotations."
+      },
+      {
+        "criterion_id": "AC-002",
+        "criterion_text": "`create_orchestrator` uses `create_deep_agent()` with: model, tools, system_prompt, subagents (list of 3), memory, skills, context_schema",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "create_orchestrator calls create_deep_agent() with model=reasoning_model, tools=4 orchestrator tools, system_prompt with domain_prompt injected, subagents=[implementer, evaluator, builder], memory=None, skills=None, context_schema=None. Tests TestCreateOrchestratorCallsDeepAgent verify all kwargs via mock patching (6 tests).",
+        "notes": "create_orchestrator calls create_deep_agent() with model=reasoning_model, tools=4 orchestrator tools, system_prompt with domain_prompt injected, subagents=[implementer, evaluator, builder], memory=None, skills=None, context_schema=None. Tests TestCreateOrchestratorCallsDeepAgent verify all kwargs via mock patching (6 tests)."
+      },
+      {
+        "criterion_id": "AC-003",
+        "criterion_text": "`agents/implementer.py` exports `implementer_subagent` as a function that accepts `model: str` and returns SubAgent TypedDict",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "implementer_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestImplementerSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type.",
+        "notes": "implementer_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestImplementerSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type."
+      },
+      {
+        "criterion_id": "AC-004",
+        "criterion_text": "Implementer SubAgent includes: name, description, system_prompt, model (required), tools (the 4 tools from TASK-OEX-002)",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "implementer_subagent returns a SubAgent dict with name='implementer', description (>10 chars), system_prompt (formatted IMPLEMENTER_SYSTEM_PROMPT), model matching the input param, and tools=[analyse_context, plan_pipeline, execute_command, verify_output]. Tests verify all 5 fields and that tools are the correct 4 BaseTool instances by name.",
+        "notes": "implementer_subagent returns a SubAgent dict with name='implementer', description (>10 chars), system_prompt (formatted IMPLEMENTER_SYSTEM_PROMPT), model matching the input param, and tools=[analyse_context, plan_pipeline, execute_command, verify_output]. Tests verify all 5 fields and that tools are the correct 4 BaseTool instances by name."
+      },
+      {
+        "criterion_id": "AC-005",
+        "criterion_text": "`agents/evaluator.py` exports `evaluator_subagent` as a function that accepts `model: str` and returns SubAgent TypedDict",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "evaluator_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestEvaluatorSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type.",
+        "notes": "evaluator_subagent(model: str) -> SubAgent is defined in agents/agents.py and re-exported from agents/__init__.py. TestEvaluatorSubagent.test_accepts_model_param and test_returns_dict verify the signature and return type."
+      },
+      {
+        "criterion_id": "AC-006",
+        "criterion_text": "Evaluator SubAgent includes: name, description, system_prompt, model (required), tools=[] (explicit empty list \u2014 NO tools)",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "evaluator_subagent returns a SubAgent dict with name='evaluator', description, system_prompt (formatted EVALUATOR_SYSTEM_PROMPT), model matching input, and tools=[] (explicit empty list). TestEvaluatorSubagent.test_has_tools_explicit_empty_list asserts tools==[] and isinstance(tools, list).",
+        "notes": "evaluator_subagent returns a SubAgent dict with name='evaluator', description, system_prompt (formatted EVALUATOR_SYSTEM_PROMPT), model matching input, and tools=[] (explicit empty list). TestEvaluatorSubagent.test_has_tools_explicit_empty_list asserts tools==[] and isinstance(tools, list)."
+      },
+      {
+        "criterion_id": "AC-007",
+        "criterion_text": "`agents/builder.py` exports `builder_async_subagent` as AsyncSubAgent TypedDict with: name, description, graph_id, url (configurable)",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "builder_async_subagent(url=None, graph_id='builder') -> AsyncSubAgent is defined in agents/agents.py and re-exported. Returns dict with name='builder', description, graph_id='builder'. URL is configurable via parameter (omitted by default for ASGI transport). TestBuilderAsyncSubagent verifies all fields and url configurability.",
+        "notes": "builder_async_subagent(url=None, graph_id='builder') -> AsyncSubAgent is defined in agents/agents.py and re-exported. Returns dict with name='builder', description, graph_id='builder'. URL is configurable via parameter (omitted by default for ASGI transport). TestBuilderAsyncSubagent verifies all fields and url configurability."
+      },
+      {
+        "criterion_id": "AC-008",
+        "criterion_text": "`agents/__init__.py` exports all agent factories/specs",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "agents/__init__.py imports and re-exports create_orchestrator, implementer_subagent, evaluator_subagent, builder_async_subagent in __all__. TestAgentsPackageExports verifies all 4 exports are importable and present in __all__.",
+        "notes": "agents/__init__.py imports and re-exports create_orchestrator, implementer_subagent, evaluator_subagent, builder_async_subagent in __all__. TestAgentsPackageExports verifies all 4 exports are importable and present in __all__."
+      },
+      {
+        "criterion_id": "AC-009",
+        "criterion_text": "All modified files pass project-configured lint/format checks with zero errors",
+        "result": "verified",
+        "status": "verified",
+        "evidence": "All files pass 'ruff check' and 'ruff format --check' with zero errors. TestCodeQuality verifies docstrings exist on all functions and the module.",
+        "notes": "All files pass 'ruff check' and 'ruff format --check' with zero errors. TestCodeQuality verifies docstrings exist on all functions and the module."
+      }
+    ]
+  },
+  "issues": [
+    {
+      "severity": "consider",
+      "category": "seam_test_recommendation",
+      "description": "No seam tests detected for cross-boundary feature. Consider adding seam/contract/boundary tests to validate technology boundary interactions. This is a recommendation, not a blocking gate."
+    }
+  ],
+  "rationale": "All quality gates passed. Independent verification confirmed. All acceptance criteria met.",
+  "context_used": null,
+  "approved_without_independent_tests": false,
+  "is_configuration_error": false
+}

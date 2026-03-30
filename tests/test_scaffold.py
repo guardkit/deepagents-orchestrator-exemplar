@@ -224,11 +224,13 @@ class TestInitFiles:
         init_path = PROJECT_ROOT / "prompts" / "__init__.py"
         assert init_path.exists(), f"prompts/__init__.py not found at {init_path}"
 
-    def test_agents_init_is_empty(self):
-        """agents/__init__.py must be empty."""
+    def test_agents_init_is_valid_python(self):
+        """agents/__init__.py must be valid Python."""
         init_path = PROJECT_ROOT / "agents" / "__init__.py"
-        content = init_path.read_text().strip()
-        assert content == "", f"agents/__init__.py should be empty, got: {content!r}"
+        content = init_path.read_text()
+        assert init_path.exists(), f"agents/__init__.py not found at {init_path}"
+        # Must be valid Python (compile will raise SyntaxError if not)
+        compile(content, str(init_path), "exec")
 
     def test_tools_init_exports_tools(self):
         """tools/__init__.py must export the orchestrator tools."""
