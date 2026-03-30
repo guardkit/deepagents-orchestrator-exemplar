@@ -1,17 +1,20 @@
 ---
-id: TASK-OEX-007
-title: "Run validation checklist and smoke test"
-task_type: testing
-parent_review: TASK-REV-8562
-feature_id: FEAT-OEX
-wave: 3
-implementation_mode: task-work
 complexity: 4
 dependencies:
-  - TASK-OEX-006
-status: pending
+- TASK-OEX-006
+feature_id: FEAT-OEX
+id: TASK-OEX-007
+implementation_mode: task-work
+parent_review: TASK-REV-8562
 priority: high
-tags: [validation, smoke-test, quality]
+status: design_approved
+tags:
+- validation
+- smoke-test
+- quality
+task_type: testing
+title: Run validation checklist and smoke test
+wave: 3
 ---
 
 # Task: Run validation checklist and smoke test
