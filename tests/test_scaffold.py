@@ -230,11 +230,14 @@ class TestInitFiles:
         content = init_path.read_text().strip()
         assert content == "", f"agents/__init__.py should be empty, got: {content!r}"
 
-    def test_tools_init_is_empty(self):
-        """tools/__init__.py must be empty."""
+    def test_tools_init_exports_tools(self):
+        """tools/__init__.py must export the orchestrator tools."""
         init_path = PROJECT_ROOT / "tools" / "__init__.py"
-        content = init_path.read_text().strip()
-        assert content == "", f"tools/__init__.py should be empty, got: {content!r}"
+        content = init_path.read_text()
+        assert "analyse_context" in content, "tools/__init__.py must export analyse_context"
+        assert "plan_pipeline" in content, "tools/__init__.py must export plan_pipeline"
+        assert "execute_command" in content, "tools/__init__.py must export execute_command"
+        assert "verify_output" in content, "tools/__init__.py must export verify_output"
 
     def test_prompts_init_exists_and_is_valid_python(self):
         """prompts/__init__.py must exist (may be populated by other tasks)."""
