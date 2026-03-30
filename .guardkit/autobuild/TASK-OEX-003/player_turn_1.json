@@ -1,0 +1,118 @@
+{
+  "task_id": "TASK-OEX-003",
+  "turn": 1,
+  "files_modified": [
+    "prompts/__init__.py"
+  ],
+  "files_created": [
+    "prompts/orchestrator_prompts.py",
+    "prompts/implementer_prompts.py",
+    "prompts/evaluator_prompts.py",
+    "tests/test_prompts.py"
+  ],
+  "tests_written": [
+    "tests/test_prompts.py"
+  ],
+  "tests_run": true,
+  "tests_passed": true,
+  "test_output_summary": "82 tests passed in 0.11s. All acceptance criteria validated: exports, prompt content, placeholders, verdict schema, domain-agnosticism, and quality checks.",
+  "implementation_notes": "Created system prompts for Orchestrator, Implementer, and Evaluator roles. All prompts are domain-agnostic with {date} placeholder for runtime injection. Orchestrator also supports {domain_prompt} placeholder. Evaluator includes full JSON verdict schema with decision/score/issues/criteria_met/quality_assessment fields. The evaluator prompt uses a two-phase build approach: %s-formatting for schema injection, then brace-escaping to preserve {date} as a runtime placeholder. The __init__.py re-exports all prompt constants with __all__.",
+  "concerns": [],
+  "requirements_addressed": [
+    "AC-001: orchestrator_prompts.py exports ORCHESTRATOR_SYSTEM_PROMPT",
+    "AC-002: implementer_prompts.py exports IMPLEMENTER_SYSTEM_PROMPT",
+    "AC-003: evaluator_prompts.py exports EVALUATOR_SYSTEM_PROMPT with JSON verdict schema",
+    "AC-004: Orchestrator prompt instructs: analyse context, plan pipeline, delegate to subagents, verify results",
+    "AC-005: Orchestrator prompt supports {domain_prompt} placeholder",
+    "AC-006: Evaluator prompt includes full JSON verdict schema",
+    "AC-007: prompts/__init__.py exports all three prompt constants",
+    "AC-008: No hardcoded domain references in prompts"
+  ],
+  "requirements_remaining": [],
+  "implementation_mode": "direct",
+  "completion_promises": [
+    {
+      "criterion_id": "AC-001",
+      "criterion_text": "[ ] `prompts/orchestrator_prompts.py` exports `ORCHESTRATOR_SYSTEM_PROMPT` \u2014 reasoning and tool selection instructions",
+      "status": "complete",
+      "evidence": "Created prompts/orchestrator_prompts.py exporting ORCHESTRATOR_SYSTEM_PROMPT as a str constant. The prompt contains reasoning instructions (think step-by-step), tool selection guidance (analyse_context, plan_pipeline, execute_command, verify_output with usage descriptions), and decision-making guidelines. Tests TestOrchestratorPromptExport verify the export exists and is a non-trivial string.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/orchestrator_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-002",
+      "criterion_text": "[ ] `prompts/implementer_prompts.py` exports `IMPLEMENTER_SYSTEM_PROMPT` \u2014 execution instructions for the implementer subagent",
+      "status": "complete",
+      "evidence": "Created prompts/implementer_prompts.py exporting IMPLEMENTER_SYSTEM_PROMPT as a str constant. The prompt focuses on execution: understanding the plan, executing with precision, handling errors gracefully, and reporting completion. It explicitly states the implementer should not self-evaluate. Tests TestImplementerPromptExport verify the export.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/implementer_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-003",
+      "criterion_text": "[ ] `prompts/evaluator_prompts.py` exports `EVALUATOR_SYSTEM_PROMPT` \u2014 evaluation criteria + JSON verdict schema",
+      "status": "complete",
+      "evidence": "Created prompts/evaluator_prompts.py exporting EVALUATOR_SYSTEM_PROMPT and EVALUATOR_VERDICT_SCHEMA. The prompt includes the full verdict JSON schema, field definitions table, decision guidelines, evaluation principles (objectivity, anti self-confirmation bias), and an evaluation checklist. Tests TestEvaluatorPromptExport and TestEvaluatorVerdictSchema verify all fields.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/evaluator_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-004",
+      "criterion_text": "[ ] Orchestrator prompt instructs: analyse context, plan pipeline, delegate to subagents, verify results",
+      "status": "complete",
+      "evidence": "The ORCHESTRATOR_SYSTEM_PROMPT has four numbered Core Responsibilities sections: 1. Analyse Context, 2. Plan Pipeline, 3. Delegate to Subagents, 4. Verify Results. Each includes detailed sub-instructions. Tests TestOrchestratorInstructions verify all four areas are present with 8 individual tests.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/orchestrator_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-005",
+      "criterion_text": "[ ] Orchestrator prompt supports `{domain_prompt}` placeholder for runtime domain injection",
+      "status": "complete",
+      "evidence": "The ORCHESTRATOR_SYSTEM_PROMPT contains a 'Domain-Specific Instructions' section with the literal {domain_prompt} placeholder. Tests TestDomainPromptPlaceholder verify the placeholder exists and can be replaced at runtime via str.format(domain_prompt=..., date=...) without error.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/orchestrator_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-006",
+      "criterion_text": "[ ] Evaluator prompt includes JSON verdict schema: `{\"decision\": \"accept|revise|reject\", \"score\": 1-5, \"issues\": [...], \"criteria_met\": bool, \"quality_assessment\": \"high|adequate|needs_revision\"}`",
+      "status": "complete",
+      "evidence": "The EVALUATOR_SYSTEM_PROMPT embeds the full verdict schema in a JSON code block with all required fields: decision (accept|revise|reject), score (1-5), issues (array), criteria_met (boolean), quality_assessment (high|adequate|needs_revision). Also exported as standalone EVALUATOR_VERDICT_SCHEMA constant. Tests TestEvaluatorVerdictSchema has 13 individual tests verifying every field and value.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/evaluator_prompts.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-007",
+      "criterion_text": "[ ] `prompts/__init__.py` exports all three prompt constants",
+      "status": "complete",
+      "evidence": "Updated prompts/__init__.py to import and re-export ORCHESTRATOR_SYSTEM_PROMPT, IMPLEMENTER_SYSTEM_PROMPT, EVALUATOR_SYSTEM_PROMPT, and EVALUATOR_VERDICT_SCHEMA. __all__ lists all four. Tests TestInitExports has 6 tests verifying each import, __all__ contents, and that init imports are identical objects to direct module imports.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/__init__.py"
+      ]
+    },
+    {
+      "criterion_id": "AC-008",
+      "criterion_text": "[ ] No hardcoded domain references in prompts (domain-agnostic)",
+      "status": "complete",
+      "evidence": "All three prompts are domain-agnostic \u2014 they contain no references to specific programming languages, frameworks, databases, or cloud providers. The orchestrator prompt explicitly states 'Be domain-agnostic'. Tests TestDomainAgnostic uses parametrized tests across 32 domain-specific terms with word-boundary regex matching, plus additional checks for language-prescriptive phrases.",
+      "test_file": "tests/test_prompts.py",
+      "implementation_files": [
+        "prompts/orchestrator_prompts.py",
+        "prompts/implementer_prompts.py",
+        "prompts/evaluator_prompts.py"
+      ]
+    }
+  ],
+  "success": true
+}
