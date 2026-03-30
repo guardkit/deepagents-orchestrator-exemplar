@@ -1,28 +1,33 @@
 ---
-id: TASK-OEX-006
-title: "Create agent.py entrypoint wiring"
-task_type: feature
-parent_review: TASK-REV-8562
-feature_id: FEAT-OEX
-wave: 2
-implementation_mode: task-work
 complexity: 5
-dependencies:
-  - TASK-OEX-005
-status: pending
-priority: high
-tags: [entrypoint, wiring, langgraph]
 consumer_context:
-  - task: TASK-OEX-005
-    consumes: AGENT_FACTORIES
-    framework: "create_orchestrator() + SubAgent factories"
-    driver: "deepagents create_deep_agent"
-    format_note: "create_orchestrator must accept reasoning_model, implementation_model, domain_prompt and return CompiledStateGraph"
-  - task: TASK-OEX-004
-    consumes: CONFIG
-    framework: "yaml.safe_load"
-    driver: "pyyaml"
-    format_note: "orchestrator-config.yaml must have orchestrator.reasoning_model and orchestrator.implementation_model keys"
+- consumes: AGENT_FACTORIES
+  driver: deepagents create_deep_agent
+  format_note: create_orchestrator must accept reasoning_model, implementation_model,
+    domain_prompt and return CompiledStateGraph
+  framework: create_orchestrator() + SubAgent factories
+  task: TASK-OEX-005
+- consumes: CONFIG
+  driver: pyyaml
+  format_note: orchestrator-config.yaml must have orchestrator.reasoning_model and
+    orchestrator.implementation_model keys
+  framework: yaml.safe_load
+  task: TASK-OEX-004
+dependencies:
+- TASK-OEX-005
+feature_id: FEAT-OEX
+id: TASK-OEX-006
+implementation_mode: task-work
+parent_review: TASK-REV-8562
+priority: high
+status: design_approved
+tags:
+- entrypoint
+- wiring
+- langgraph
+task_type: feature
+title: Create agent.py entrypoint wiring
+wave: 2
 ---
 
 # Task: Create agent.py entrypoint wiring
