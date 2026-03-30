@@ -179,7 +179,7 @@ def create_orchestrator(
         tools=list(_ORCHESTRATOR_TOOLS),
         system_prompt=system_prompt,
         subagents=subagents,
-        memory=None,
+        memory=["./AGENTS.md"],
         skills=None,
         context_schema=None,
     )

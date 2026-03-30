@@ -1,12 +1,15 @@
-"""Tests for agent.py entrypoint wiring (TASK-OEX-006).
+"""Tests for agent.py entrypoint wiring (TASK-OEX-006, TASK-EVF-001).
 
 Verifies that agent.py correctly reads configuration, loads domain context,
 creates the orchestrator, and exports a module-level ``agent`` variable
-compatible with langgraph.json.
+compatible with langgraph.json.  Also verifies the ``--domain`` CLI argument
+added in TASK-EVF-001.
 """
 
 from __future__ import annotations
 
+import subprocess
+import sys
 import textwrap
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -314,3 +317,47 @@ class TestRealConfigIntegration:
         assert "graphs" in lg
         assert "orchestrator" in lg["graphs"]
         assert lg["graphs"]["orchestrator"] == "./agent.py:agent"
+
+
+# ---------------------------------------------------------------------------
+# TASK-EVF-001: --domain CLI argument added to agent.py
+# ---------------------------------------------------------------------------
+
+
+class TestCLIArgument:
+    """TASK-EVF-001: --domain CLI argument parsed via argparse.parse_known_args()."""
+
+    def test_argparse_domain_default(self) -> None:
+        """parse_known_args with no args gives the default domain 'example-domain'."""
+        from agent import _arg_parser
+
+        args, unknown = _arg_parser.parse_known_args([])
+        assert args.domain == "example-domain"
+        assert unknown == []
+
+    def test_argparse_domain_custom(self) -> None:
+        """--domain custom-domain parses the provided value correctly."""
+        from agent import _arg_parser
+
+        args, unknown = _arg_parser.parse_known_args(["--domain", "custom-domain"])
+        assert args.domain == "custom-domain"
+        assert unknown == []
+
+    def test_argparse_unknown_args_ignored(self) -> None:
+        """Unknown arguments are collected silently (parse_known_args behaviour)."""
+        from agent import _arg_parser
+
+        args, unknown = _arg_parser.parse_known_args(["--domain", "my-domain", "--unexpected-flag", "value"])
+        assert args.domain == "my-domain"
+        assert "--unexpected-flag" in unknown
+
+    def test_cli_help_runs(self) -> None:
+        """Running ``python agent.py --help`` exits cleanly with exit code 0."""
+        result = subprocess.run(
+            [sys.executable, str(_PROJECT_ROOT / "agent.py"), "--help"],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert "--domain" in result.stdout
+        assert "example-domain" in result.stdout

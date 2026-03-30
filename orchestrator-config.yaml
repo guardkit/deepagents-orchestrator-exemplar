@@ -11,6 +11,10 @@ orchestrator:
   # Format: "provider:model" — compatible with langchain init_chat_model()
   implementation_model: "anthropic:claude-haiku-4-5"
 
+  # Local model endpoint for vLLM or compatible OpenAI-API servers
+  local:
+    endpoint: "http://localhost:8000/v1"
+
   # Checkpoint level controls state persistence granularity
   # Options: "minimal" | "standard" | "verbose"
   checkpoint_level: "standard"

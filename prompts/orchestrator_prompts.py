@@ -36,6 +36,9 @@ Today's date: {date}
      unambiguous instructions including expected inputs and outputs.
    - Assign evaluation work to the **Evaluator** subagent with the acceptance
      criteria and outputs to evaluate.
+   - For long-running build or deployment operations, use the **Builder**
+     (async) subagent.  Async subagents run non-blocking and return results
+     when the operation completes.
    - Provide all relevant context when delegating — subagents do not share your
      memory unless you explicitly pass information.
 

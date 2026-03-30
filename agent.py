@@ -11,6 +11,7 @@ Usage via LangGraph::
 
 from __future__ import annotations
 
+import argparse
 import logging
 from pathlib import Path
 from typing import Any
@@ -144,6 +145,23 @@ def _build_agent(
 
 
 # ---------------------------------------------------------------------------
+# CLI argument parsing
+# ---------------------------------------------------------------------------
+
+# Use parse_known_args() so that unexpected sys.argv values injected by the
+# LangGraph server (or other import-time callers) do not raise SystemExit.
+_arg_parser = argparse.ArgumentParser(
+    description="DeepAgents orchestrator exemplar",
+    add_help=True,
+)
+_arg_parser.add_argument(
+    "--domain",
+    default=DEFAULT_DOMAIN,
+    help="Domain name to load from domains/{domain}/DOMAIN.md (default: %(default)s)",
+)
+_parsed_args, _unknown_args = _arg_parser.parse_known_args()
+
+# ---------------------------------------------------------------------------
 # Module-level initialisation
 # ---------------------------------------------------------------------------
 
@@ -152,7 +170,7 @@ load_dotenv(dotenv_path=_PROJECT_ROOT / ".env", override=False)
 
 # Read config and domain, then build the orchestrator agent.
 _config = _load_config(_PROJECT_ROOT / "orchestrator-config.yaml")
-_domain_prompt = _load_domain_prompt(_PROJECT_ROOT, DEFAULT_DOMAIN)
+_domain_prompt = _load_domain_prompt(_PROJECT_ROOT, _parsed_args.domain)
 
 #: Module-level agent variable required by langgraph.json.
 #: ``langgraph.json`` references ``./agent.py:agent``.
