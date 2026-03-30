@@ -1,0 +1,161 @@
+id: FEAT-5009
+name: DeepAgents Orchestrator Exemplar
+description: Three-role agent exemplar (Orchestrator + Implementer + Evaluator) with
+  multi-model architecture and AsyncSubAgent for non-blocking execution
+created: '2026-03-30T17:12:57.351320'
+status: completed
+complexity: 6
+estimated_tasks: 7
+tasks:
+- id: TASK-OEX-001
+  name: Scaffold project structure
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-001-scaffold-project.md
+  complexity: 3
+  dependencies: []
+  status: completed
+  implementation_mode: direct
+  estimated_minutes: 33
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:27:18.675282'
+  completed_at: '2026-03-30T17:41:47.717152'
+- id: TASK-OEX-002
+  name: Implement orchestrator tools
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-002-implement-tools.md
+  complexity: 5
+  dependencies: []
+  status: completed
+  implementation_mode: task-work
+  estimated_minutes: 75
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:27:18.678407'
+  completed_at: '2026-03-30T17:41:47.720963'
+- id: TASK-OEX-003
+  name: Create system prompts
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-003-create-prompts.md
+  complexity: 4
+  dependencies: []
+  status: completed
+  implementation_mode: task-work
+  estimated_minutes: 50
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:27:18.681289'
+  completed_at: '2026-03-30T17:41:47.724116'
+- id: TASK-OEX-004
+  name: Create config and domain structure
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-004-create-config.md
+  complexity: 3
+  dependencies: []
+  status: completed
+  implementation_mode: direct
+  estimated_minutes: 33
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:27:18.683988'
+  completed_at: '2026-03-30T17:41:47.727344'
+- id: TASK-OEX-005
+  name: Create agent definitions
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-005-create-agent-definitions.md
+  complexity: 7
+  dependencies:
+  - TASK-OEX-001
+  - TASK-OEX-002
+  - TASK-OEX-003
+  - TASK-OEX-004
+  status: completed
+  implementation_mode: task-work
+  estimated_minutes: 170
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:41:51.527201'
+  completed_at: '2026-03-30T17:50:23.665616'
+- id: TASK-OEX-006
+  name: Create entrypoint wiring
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-006-create-entrypoint.md
+  complexity: 5
+  dependencies:
+  - TASK-OEX-005
+  status: completed
+  implementation_mode: task-work
+  estimated_minutes: 75
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:50:23.681025'
+  completed_at: '2026-03-30T17:56:36.106949'
+- id: TASK-OEX-007
+  name: Run validation and smoke test
+  file_path: tasks/backlog/orchestrator-exemplar/TASK-OEX-007-validation.md
+  complexity: 4
+  dependencies:
+  - TASK-OEX-006
+  status: completed
+  implementation_mode: task-work
+  estimated_minutes: 50
+  requires_infrastructure: []
+  result:
+    total_turns: 1
+    final_decision: approved
+    error: null
+  turns_completed: 1
+  current_turn: 0
+  started_at: '2026-03-30T17:56:36.122466'
+  completed_at: '2026-03-30T18:04:47.816770'
+orchestration:
+  parallel_groups:
+  - - TASK-OEX-001
+    - TASK-OEX-002
+    - TASK-OEX-003
+    - TASK-OEX-004
+  - - TASK-OEX-005
+  - - TASK-OEX-006
+  - - TASK-OEX-007
+  estimated_duration_minutes: 486
+  recommended_parallel: 4
+execution:
+  started_at: '2026-03-30T17:27:18.658707'
+  completed_at: '2026-03-30T18:04:47.826123'
+  worktree_path: /Users/richardwoollcott/Projects/appmilla_github/deepagents-orchestrator-exemplar/.guardkit/worktrees/FEAT-5009
+  total_turns: 7
+  tasks_completed: 7
+  tasks_failed: 0
+  current_wave: 4
+  completed_waves:
+  - 1
+  - 2
+  - 3
+  - 4
+  last_updated: '2026-03-30T18:04:47.821282'
+  archived_at: null
+  archived_to: null
